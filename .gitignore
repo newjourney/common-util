@@ -1,0 +1,10 @@
+.idea/
+.gradle/
+build/
+.classpath
+.project
+.settings/
+*.log*
+*.iml
+.DS_Store
+nohup.out
