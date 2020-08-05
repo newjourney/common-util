@@ -5,13 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 通用的Logger调用方式
  * Created by KlausZ on 2019/12/25.
  */
 public class CommonLogger {
 
-
-    private static Logger logger = getLogger(CommonLogger.class);
+    private static final Logger logger = getLogger(CommonLogger.class);
 
     public static Logger getLogger(String name) {
         return LoggerFactory.getLogger(name);

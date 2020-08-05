@@ -11,12 +11,12 @@ public class TestCodecEnum {
     @Test
     public void test() {
         CommonLogger.info("ONE : {}", TestEnum.ONE.code());
-        CommonLogger.info("101 : {}", CodecEnum.getByCode(TestEnum.class, 101));
+        CommonLogger.info("2 : {}", CodecEnum.getByCode(TestEnum.class, 2));
     }
 
     public enum TestEnum implements CodecEnum {
-        @Codec(100) ONE,
-        @Codec(101) TWO
+        @Codec(1) ONE,
+        @Codec(2) TWO
 
     }
 
