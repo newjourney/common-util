@@ -22,7 +22,7 @@ public class ConsumerTask<R> {
      private static final Logger logger = LoggerFactory.getLogger(ConsumerTask.class);
 
     private final Supplier<R> supplier;
-    private final ExecutorService supplierExecutor;
+    private final Executor supplierExecutor;
     private final ResultConsumer consumer;
 
     private ScheduledFuture<?> timeoutFuture;
@@ -30,8 +30,8 @@ public class ConsumerTask<R> {
     /**
      * Supplier run in supplierExecutor, Consumer run in consumerExecutor
      */
-    public ConsumerTask(Supplier<R> supplier, ExecutorService supplierExecutor,
-                        BiConsumer<R, Boolean> consumer, ExecutorService consumerExecutor) {
+    public ConsumerTask(Supplier<R> supplier, Executor supplierExecutor,
+                        BiConsumer<R, Boolean> consumer, Executor consumerExecutor) {
         this.supplier = supplier;
         this.supplierExecutor = supplierExecutor;
         this.consumer = new ResultConsumer(consumer, consumerExecutor);
@@ -61,7 +61,7 @@ public class ConsumerTask<R> {
      * submit this task into supplierExecutor
      */
     public void submit() {
-        supplierExecutor.submit(this::exec);
+        supplierExecutor.execute(this::exec);
     }
 
     /**
@@ -81,12 +81,12 @@ public class ConsumerTask<R> {
 
     /** Consume the result */
     private class ResultConsumer {
-        final ExecutorService executor;
+        final Executor executor;
         final BiConsumer<R, Boolean> consumer;
         final AtomicBoolean flag;
         CountDownLatch latch;
 
-        private ResultConsumer(BiConsumer<R, Boolean> consumer, ExecutorService executor) {
+        private ResultConsumer(BiConsumer<R, Boolean> consumer, Executor executor) {
             this.consumer = consumer;
             this.executor = executor;
             this.flag = new AtomicBoolean(false);
@@ -95,7 +95,7 @@ public class ConsumerTask<R> {
         void accept(R result, boolean timeout) {
             if (flag.compareAndSet(false, true)) {
                 if (executor != null) {
-                    executor.submit(() -> consumer.accept(result, timeout));
+                    executor.execute(() -> consumer.accept(result, timeout));
                 } else {
                     consumer.accept(result, timeout);
                 }
