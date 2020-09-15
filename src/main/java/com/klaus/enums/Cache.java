@@ -13,9 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 class Cache {
 
-    private static Map<Class<? extends CodecEnum>, Map<Object, Integer>> CACHE_BY_ENUM = new ConcurrentHashMap<>();
-    private static Map<Class<? extends CodecEnum>, Map<Integer, Object>> CACHE_BY_CODE = new ConcurrentHashMap<>();
+    private static final Map<Class<? extends CodecEnum>, Map<Object, Integer>> CACHE_BY_ENUM = new ConcurrentHashMap<>();
+    private static final Map<Class<? extends CodecEnum>, Map<Integer, Object>> CACHE_BY_CODE = new ConcurrentHashMap<>();
 
+    @SuppressWarnings("rawtypes")
     private static void decode(Class<? extends CodecEnum> clazz) {
         try {
             if (CACHE_BY_ENUM.containsKey(clazz) && CACHE_BY_CODE.containsKey(clazz)) return;
